@@ -1,0 +1,69 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Europe/Sofia",
+  "labels": ["dependencies"],
+  "assignees": ["@plpetkov-tech"],
+  "automerge": false,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 0,
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore:",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+  "schedule": [
+    "before 6am on Monday"
+  ],
+  "packageRules": [
+    {
+      "description": "Pin Alpine Docker base image with auto-updates",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["alpine"],
+      "enabled": true,
+      "automerge": false,
+      "separateMinorPatch": true,
+      "pinDigests": false
+    },
+    {
+      "description": "Auto-update GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "enabled": true,
+      "automerge": false,
+      "pinDigests": true,
+      "separateMinorPatch": false,
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Python dependencies - group all updates",
+      "matchManagers": ["pip_requirements"],
+      "matchFiles": ["requirements.txt"],
+      "enabled": true,
+      "automerge": false,
+      "rangeStrategy": "bump",
+      "groupName": "Python dependencies"
+    },
+    {
+      "description": "Separate major updates for Python packages",
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Python major updates",
+      "separateMajorMinor": true,
+      "automerge": false
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "assignees": ["@plpetkov-tech"]
+  },
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "dependencyDashboardHeader": "This is your Renovate dependency dashboard. It tracks all pending updates and provides an overview.",
+  "dependencyDashboardFooter": "Powered by [Renovate](https://renovatebot.com)"
+}
