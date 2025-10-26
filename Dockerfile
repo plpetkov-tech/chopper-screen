@@ -24,6 +24,8 @@ RUN apk add --no-cache \
     chromium-chromedriver \
     xvfb \
     ttf-freefont \
+    mesa-dri-gallium \
+    libdrm \
     && rm -rf /var/cache/apk/*
 
 # Create app directory
@@ -46,8 +48,8 @@ ENV DISPLAY_URL="https://google.com" \
     WINDOW_HEIGHT="600" \
     CHROMIUM_TIMEOUT="30" \
     CHECK_INTERVAL="60" \
-    FULLSCREEN="true" \
-    SDL_VIDEODRIVER="fbcon"
+    FULLSCREEN="true"
+# SDL_VIDEODRIVER - Auto-detected (kmsdrm, fbcon, directfb). Override if needed.
 
 # Health check
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \

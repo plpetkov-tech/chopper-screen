@@ -46,18 +46,45 @@ class ScreenDashboard:
                 self.backlight_path = backlight_devices[0]
                 logger.info(f"Auto-detected backlight device: {self.backlight_path}")
 
-        # Initialize pygame for framebuffer
-        video_driver = os.getenv('SDL_VIDEODRIVER', 'fbcon')
-        os.environ['SDL_VIDEODRIVER'] = video_driver
-        pygame.init()
-
-        fullscreen = os.getenv('FULLSCREEN', 'true').lower() == 'true'
-        if fullscreen:
-            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        else:
-            self.screen = pygame.display.set_mode((self.window_width, self.window_height))
-
+        # Initialize pygame with appropriate video driver
+        self.screen = self._initialize_display()
         logger.info(f"Dashboard initialized - URL: {self.url}, Refresh: {self.refresh_interval}s")
+
+    def _initialize_display(self):
+        """Initialize pygame display with fallback drivers"""
+        fullscreen = os.getenv('FULLSCREEN', 'true').lower() == 'true'
+
+        # Try drivers in order: kmsdrm (modern), fbcon (legacy), directfb, dummy (fallback)
+        drivers = ['kmsdrm', 'fbcon', 'directfb', 'dummy']
+
+        # Allow override from environment
+        preferred_driver = os.getenv('SDL_VIDEODRIVER', '')
+        if preferred_driver:
+            drivers.insert(0, preferred_driver)
+
+        last_error = None
+        for driver in drivers:
+            try:
+                logger.info(f"Attempting to initialize display with driver: {driver}")
+                os.environ['SDL_VIDEODRIVER'] = driver
+                pygame.init()
+
+                if fullscreen:
+                    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+                else:
+                    screen = pygame.display.set_mode((self.window_width, self.window_height))
+
+                logger.info(f"Successfully initialized display with driver: {driver}")
+                return screen
+
+            except pygame.error as e:
+                last_error = e
+                logger.warning(f"Driver {driver} failed: {e}")
+                pygame.quit()
+                continue
+
+        # If all drivers failed, raise the last error
+        raise RuntimeError(f"Failed to initialize display with any driver. Last error: {last_error}")
 
     def take_screenshot(self):
         """Take screenshot of webpage using headless chrome"""

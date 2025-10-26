@@ -83,6 +83,8 @@ spec:
         volumeMounts:
         - name: framebuffer
           mountPath: /dev/fb0
+        - name: dri
+          mountPath: /dev/dri
         - name: backlight
           mountPath: /sys/class/backlight
           readOnly: false
@@ -118,6 +120,10 @@ spec:
         hostPath:
           path: /dev/fb0
           type: CharDevice
+      - name: dri
+        hostPath:
+          path: /dev/dri
+          type: Directory
       - name: backlight
         hostPath:
           path: /sys/class/backlight

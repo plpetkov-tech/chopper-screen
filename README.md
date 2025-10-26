@@ -77,7 +77,7 @@ All configuration is done via environment variables. You can change these withou
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `CHECK_INTERVAL` | `60` | Schedule check interval in seconds |
-| `SDL_VIDEODRIVER` | `fbcon` | SDL video driver |
+| `SDL_VIDEODRIVER` | (auto-detect) | SDL video driver - auto-detects kmsdrm, fbcon, or directfb. Override if needed. |
 
 ## Deployment Examples
 
@@ -222,6 +222,30 @@ All Renovate settings are in `renovate.json`:
 - Verify time format is `HH:MM` (24-hour)
 - Check container timezone matches your timezone
 - Look for "Night time" in logs
+
+### SDL video driver errors (fbcon not available)
+
+The app automatically tries multiple video drivers (kmsdrm → fbcon → directfb → dummy).
+
+- **Check logs** to see which driver was selected: `kubectl logs -f <pod-name>`
+- **Modern devices** (PostmarketOS, newer kernels) use `kmsdrm`
+- **Legacy devices** (older Raspberry Pi) use `fbcon`
+- **Override driver** if auto-detection fails:
+  ```yaml
+  env:
+  - name: SDL_VIDEODRIVER
+    value: "kmsdrm"  # or fbcon, directfb
+  ```
+- Ensure container has `/dev/dri` access for kmsdrm:
+  ```yaml
+  volumeMounts:
+  - name: dri
+    mountPath: /dev/dri
+  volumes:
+  - name: dri
+    hostPath:
+      path: /dev/dri
+  ```
 
 ## Development
 
