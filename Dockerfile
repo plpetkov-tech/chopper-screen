@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.22
 
 # Build arguments for versioning
 ARG BUILD_DATE
