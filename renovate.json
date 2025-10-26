@@ -37,20 +37,20 @@
       "groupName": "GitHub Actions"
     },
     {
-      "description": "Python dependencies - group all updates",
+      "description": "Python dependencies - group minor/patch updates",
       "matchManagers": ["pip_requirements"],
-      "matchFiles": ["requirements.txt"],
+      "matchFileNames": ["requirements.txt"],
+      "matchUpdateTypes": ["minor", "patch"],
       "enabled": true,
       "automerge": false,
-      "rangeStrategy": "bump",
       "groupName": "Python dependencies"
     },
     {
       "description": "Separate major updates for Python packages",
       "matchManagers": ["pip_requirements"],
+      "matchFileNames": ["requirements.txt"],
       "matchUpdateTypes": ["major"],
       "groupName": "Python major updates",
-      "separateMajorMinor": true,
       "automerge": false
     }
   ],
