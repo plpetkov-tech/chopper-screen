@@ -47,6 +47,7 @@ All configuration is done via environment variables. You can change these withou
 | `WINDOW_WIDTH` | `800` | Screenshot width in pixels |
 | `WINDOW_HEIGHT` | `600` | Screenshot height in pixels |
 | `FULLSCREEN` | `true` | Enable fullscreen mode |
+| `ROTATION` | `0` | Display rotation in degrees: 0, 90, 180, 270 |
 | `REFRESH_INTERVAL` | `300` | Refresh interval in seconds |
 
 ### Night Mode
@@ -108,11 +109,14 @@ DISPLAY_URL: "https://your-awesome-dashboard.com"
 REFRESH_INTERVAL: "120"
 WINDOW_WIDTH: "1080"   # OnePlus 6 native resolution
 WINDOW_HEIGHT: "2280"  # Portrait mode
+ROTATION: "0"          # Use 90 or 270 if orientation is wrong
 NIGHT_MODE_ENABLED: "true"
 NIGHT_START: "23:00"
 NIGHT_END: "07:00"
 BACKLIGHT_PATH: ""  # Auto-detect on PostmarketOS
 ```
+
+**Tip**: If the display appears sideways, try `ROTATION: "90"` or `ROTATION: "270"` to fix the orientation.
 
 ### Multiple Displays (Node Selector)
 

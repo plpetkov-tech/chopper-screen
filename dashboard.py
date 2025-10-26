@@ -29,6 +29,12 @@ class ScreenDashboard:
         # Display settings
         self.window_width = int(os.getenv('WINDOW_WIDTH', '800'))
         self.window_height = int(os.getenv('WINDOW_HEIGHT', '600'))
+        self.rotation = int(os.getenv('ROTATION', '0'))  # Rotation in degrees: 0, 90, 180, 270
+
+        # Validate rotation
+        if self.rotation not in [0, 90, 180, 270]:
+            logger.warning(f"Invalid rotation {self.rotation}, defaulting to 0")
+            self.rotation = 0
 
         # Chromium settings
         self.chromium_path = os.getenv('CHROMIUM_PATH', 'chromium-browser')
@@ -115,8 +121,16 @@ class ScreenDashboard:
         """Display image on framebuffer"""
         try:
             image = pygame.image.load(image_path)
+
+            # Apply rotation if set
+            if self.rotation != 0:
+                image = pygame.transform.rotate(image, self.rotation)
+                logger.debug(f"Image rotated by {self.rotation} degrees")
+
+            # Scale to screen size
             screen_size = self.screen.get_size()
             image = pygame.transform.scale(image, screen_size)
+
             self.screen.blit(image, (0, 0))
             pygame.display.flip()
             logger.info("Image displayed successfully")

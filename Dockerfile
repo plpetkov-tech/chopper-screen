@@ -46,10 +46,12 @@ ENV DISPLAY_URL="https://google.com" \
     NIGHT_END="07:00" \
     WINDOW_WIDTH="800" \
     WINDOW_HEIGHT="600" \
+    ROTATION="0" \
     CHROMIUM_TIMEOUT="30" \
     CHECK_INTERVAL="60" \
     FULLSCREEN="true"
 # SDL_VIDEODRIVER - Auto-detected (kmsdrm, fbcon, directfb). Override if needed.
+# ROTATION - Display rotation in degrees: 0, 90, 180, 270
 
 # Health check
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
