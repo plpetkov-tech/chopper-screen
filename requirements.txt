@@ -1,2 +1,2 @@
-pygame==2.5.2
-schedule==1.2.1
+pygame==2.6.1
+schedule==1.2.2
